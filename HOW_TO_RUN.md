@@ -58,6 +58,21 @@ If sign-in reports an authorized-domain error, add your development host (usuall
 
 The local `.env` file is excluded from Git. Firebase web configuration is used by the browser app; protect any future private server credentials separately and configure Firebase security rules before storing private store data in Firestore.
 
+### Branded password-reset page
+
+The app has a Northstar-styled password-reset form that verifies the Firebase action code and lets the user choose a new password. To make Firebase reset emails open this page rather than Firebase's default white action screen:
+
+1. In Firebase Console, go to **Authentication → Templates → Password reset** and edit the template.
+2. Set the template's **Action URL** (custom action handler URL) to your app origin. For this deployment, use `https://infozatech-analytics.web.app/`.
+3. Under **Authentication → Settings → Authorized domains**, confirm `infozatech-analytics.web.app` is listed.
+4. Save the template and request a **new** password-reset email. Links already sent keep the old handler URL.
+
+The reset form verifies the email link with Firebase and only updates the password after the user submits matching passwords of at least six characters. Reset links contain one-time codes; do not share them. If a link has been exposed or expired, request a fresh one.
+
+### Sign-in, registration, and forgot password
+
+The sign-in and registration screens use the Northstar responsive design. On the sign-in screen, choose **Forgot password?**. If the email field already contains an address, the reset email is requested right away. If it is blank, enter the existing account email on the recovery form and choose **Send password reset email**. Firebase emails a reset link for a registered account; the app displays a generic confirmation to avoid revealing whether an address has an account. The email arrives independently of the Firebase Console users list; users do not need to be added there manually to trigger a reset.
+
 ### Configure GitHub Actions deployments
 
 The Firebase Hosting workflow builds the app in GitHub Actions, where the local `.env` file is not available. Add these four **repository Actions variables** under **Settings → Secrets and variables → Actions → Variables** so the deployed sign-in screen receives the Firebase web-app config:
@@ -69,7 +84,7 @@ The Firebase Hosting workflow builds the app in GitHub Actions, where the local 
 
 These are Firebase web-app client configuration values, not server credentials. Save the variables before pushing a change to `main` to run the Hosting deployment again. Keep private service-account credentials in **Actions secrets**, not variables.
 
-The GitHub Actions deployment workflow expects the Hosting service-account credential in the `FIREBASE_SERVICE_ACCOUNT_INFOZATECH_ANALYTICS` repository secret. If the Firebase Actions variables are missing, a GitHub-triggered build cannot initialize Firebase Authentication correctly.
+The GitHub Actions deployment workflow expects the Hosting service-account credential in the `FIREBASE_SERVICE_ACCOUNT_INFOZATECH_ANALYTICS` repository secret. The workflow checks for all four Firebase Actions variables before building or deploying, so missing configuration stops the workflow instead of replacing the live site with a broken sign-in build.
 
 ## Start the development server
 

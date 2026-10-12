@@ -17,6 +17,8 @@ Northstar brings store performance into one view with sales summaries, interacti
 - Light and dark themes, with the selected theme remembered in the browser
 - Interactive store insights based on current filters
 - Firebase email/password account creation, sign-in, password reset, and sign-out
+- A branded password-reset page for secure Firebase reset links
+- Modern sign-in and registration screens with responsive styling
 - Responsive desktop, tablet, and mobile layouts
 - Readable dashboard typography with high-contrast store and filter menus
 
@@ -84,6 +86,19 @@ Vite prints the local address, usually `http://localhost:5173`.
 
 Add `localhost` under Firebase **Authentication → Settings → Authorized domains** if Firebase asks you to authorize the development host.
 
+### Use the branded password-reset page
+
+The app includes a responsive Northstar page that verifies Firebase password-reset links and lets the user choose a new password. To use it instead of Firebase's default action page:
+
+1. In Firebase Console, open **Authentication → Templates → Password reset** and edit the template.
+2. Set its **Action URL** (custom action handler URL) to the deployed app origin, for example `https://infozatech-analytics.web.app/`.
+3. In **Authentication → Settings → Authorized domains**, make sure `infozatech-analytics.web.app` is authorized.
+4. Save the template, then request a **new** reset email. Previously sent emails still contain their original action link.
+
+The app verifies the one-time action code with Firebase before displaying the password form and applies the new password through Firebase Authentication.
+
+On the sign-in screen, choose **Forgot password?**. If an email address is already entered, the app sends the reset email immediately; otherwise, enter the account email on the recovery screen and choose **Send password reset email**. Firebase only sends a link for an existing account, and the UI uses a generic confirmation for privacy.
+
 ## Build
 
 Create an optimized production build:
@@ -124,7 +139,7 @@ firebase deploy --only hosting
 
 Add the deployed domain under Firebase **Authentication → Settings → Authorized domains**. See [HOW_TO_RUN.md](./HOW_TO_RUN.md) for Windows-specific setup and troubleshooting.
 
-For GitHub Actions deployments, add `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, and `VITE_FIREBASE_APP_ID` as repository Actions variables under **Settings → Secrets and variables → Actions → Variables** before pushing to `main`. The local `.env` file is not uploaded to GitHub Actions. Keep the Firebase Hosting service-account credential in Actions **secrets**. A successful deployment is available at [https://infozatech-analytics.web.app](https://infozatech-analytics.web.app).
+For GitHub Actions deployments, add `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, and `VITE_FIREBASE_APP_ID` as repository Actions variables under **Settings → Secrets and variables → Actions → Variables** before pushing to `main`. The local `.env` file is not uploaded to GitHub Actions. Workflows stop before deployment if any required Firebase variable is missing, preventing an unconfigured build from replacing the live site. Keep the Firebase Hosting service-account credential in Actions **secrets**. A successful deployment is available at [https://infozatech-analytics.web.app](https://infozatech-analytics.web.app).
 
 ## Security and data notes
 

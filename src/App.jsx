@@ -22,12 +22,14 @@ import {
   X,
 } from "lucide-react";
 import {
+  confirmPasswordReset,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
+  verifyPasswordResetCode,
 } from "@firebase/auth";
 import {
   Area,
@@ -125,7 +127,9 @@ const formatDate = (value, options = { month: "short", day: "numeric" }) =>
 const getAuthErrorMessage = (error) => {
   const messages = {
     "auth/email-already-in-use": "That email already has an account. Try signing in instead.",
+    "auth/expired-action-code": "This password reset link has expired. Request a new one from the sign-in page.",
     "auth/invalid-credential": "The email or password is incorrect.",
+    "auth/invalid-action-code": "This password reset link is invalid or has already been used. Request a new one from the sign-in page.",
     "auth/invalid-email": "Enter a valid email address.",
     "auth/weak-password": "Choose a stronger password with at least 6 characters.",
     "auth/too-many-requests": "There have been too many attempts. Wait a little and try again.",
@@ -138,7 +142,161 @@ const getAuthErrorMessage = (error) => {
   return messages[error.code] || error.message || "Authentication failed. Please try again.";
 };
 
+function PasswordResetPage() {
+  const actionCode = new URLSearchParams(window.location.search).get("oobCode");
+  const [verification, setVerification] = useState("checking");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [complete, setComplete] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    if (!auth || !actionCode) {
+      setVerification("error");
+      setError(!auth
+        ? "Password reset is temporarily unavailable. Please try again later."
+        : "This password reset link is incomplete. Request a new one from the sign-in page.");
+      return () => { active = false; };
+    }
+
+    verifyPasswordResetCode(auth, actionCode)
+      .then((verifiedEmail) => {
+        if (active) {
+          setEmail(verifiedEmail);
+          setVerification("ready");
+        }
+      })
+      .catch((verificationError) => {
+        if (active) {
+          setError(getAuthErrorMessage(verificationError));
+          setVerification("error");
+        }
+      });
+
+    return () => { active = false; };
+  }, [actionCode]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+
+    if (password.length < 6) {
+      setError("Choose a password with at least 6 characters.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Those passwords do not match. Check both fields and try again.");
+      return;
+    }
+    if (!auth || !actionCode) {
+      setError("Password reset is temporarily unavailable. Please request a new link.");
+      return;
+    }
+
+    setBusy(true);
+    try {
+      await confirmPasswordReset(auth, actionCode, password);
+      setComplete(true);
+    } catch (submitError) {
+      setError(getAuthErrorMessage(submitError));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const ready = verification === "ready";
+  const heading = complete
+    ? "Password updated."
+    : verification === "checking"
+      ? "Checking your link."
+      : ready
+        ? "Choose a new password."
+        : "This link needs attention.";
+
+  return (
+    <main className="reset-screen">
+      <div className="reset-glow reset-glow-one" aria-hidden="true" />
+      <div className="reset-glow reset-glow-two" aria-hidden="true" />
+      <section className="reset-layout">
+        <div className="reset-story">
+          <a className="brand reset-brand" href="/" aria-label="Northstar home">
+            <span className="brand-mark"><Activity size={18} /></span>
+            <span>northstar<span className="brand-light">.</span></span>
+          </a>
+          <p className="reset-story-kicker">A CLEARER VIEW OF YOUR BUSINESS</p>
+          <h1>Your store,<br />in good hands.</h1>
+          <p className="reset-story-copy">Securely update your password and get back to the details that move your business forward.</p>
+          <div className="reset-story-mark" aria-hidden="true">✳</div>
+        </div>
+
+        <section className="reset-card" aria-labelledby="reset-title">
+          <div className={`reset-icon${complete ? " reset-icon-success" : ""}`} aria-hidden="true">
+            {complete ? <PackageCheck size={23} /> : <Settings2 size={23} />}
+          </div>
+          <p className="reset-kicker">{complete ? "ALL SET" : "ACCOUNT RECOVERY"}</p>
+          <h2 id="reset-title">{heading}</h2>
+          {verification === "checking" && !complete ? (
+            <p className="reset-description">We’re checking that your secure reset link is valid.</p>
+          ) : null}
+          {ready && !complete ? (
+            <>
+              <p className="reset-description">Create a fresh password for <strong>{email}</strong>.</p>
+              <form className="reset-form" onSubmit={handleSubmit}>
+                <label htmlFor="new-password">New password</label>
+                <input
+                  id="new-password"
+                  type="password"
+                  autoComplete="new-password"
+                  minLength={6}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="At least 6 characters"
+                  required
+                />
+                <label htmlFor="confirm-new-password">Confirm new password</label>
+                <input
+                  id="confirm-new-password"
+                  type="password"
+                  autoComplete="new-password"
+                  minLength={6}
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  placeholder="Enter your new password again"
+                  required
+                />
+                {error && <p className="reset-feedback error" role="alert">{error}</p>}
+                <button className="reset-submit" type="submit" disabled={busy || password.length < 6 || !confirmPassword}>
+                  {busy ? "Updating password…" : "Save new password"}
+                </button>
+              </form>
+              <p className="reset-security-note"><span aria-hidden="true">✓</span> Use at least 6 characters. A unique password is best.</p>
+            </>
+          ) : null}
+          {error && !ready && !complete && <p className="reset-feedback error" role="alert">{error}</p>}
+          {complete && (
+            <>
+              <p className="reset-description">Your password has been changed. Sign in with your new password to continue.</p>
+              <a className="reset-submit reset-link" href="/">Back to sign in</a>
+            </>
+          )}
+          {verification === "checking" && !complete && <span className="reset-loader" aria-label="Verifying reset link" />}
+          {verification === "error" && (
+            <a className="reset-secondary-link" href="/">Return to sign in and request a new link</a>
+          )}
+          <p className="reset-footnote">Your account is protected by Firebase Authentication.</p>
+        </section>
+      </section>
+    </main>
+  );
+}
+
 function App() {
+  const isPasswordResetAction =
+    new URLSearchParams(window.location.search).get("mode") === "resetPassword";
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(firebaseConfigured);
   const [authMode, setAuthMode] = useState("signin");
@@ -368,12 +526,23 @@ function App() {
 
     setAuthBusy(true);
     try {
-      await sendPasswordResetEmail(auth, authEmail.trim());
+      await sendPasswordResetEmail(auth, authEmail.trim(), {
+        url: window.location.origin,
+        handleCodeInApp: false,
+      });
       setAuthMessage("If an account exists for that address, Firebase will send a password reset email.");
     } catch (error) {
       setAuthError(getAuthErrorMessage(error));
     } finally {
       setAuthBusy(false);
+    }
+  };
+
+  const handleForgotPasswordClick = () => {
+    clearAuthFeedback();
+    setAuthMode("reset");
+    if (authEmail.trim()) {
+      void handlePasswordReset();
     }
   };
 
@@ -408,6 +577,10 @@ function App() {
     { label: "Average order", value: formatCurrency(summary.averageOrder), trend: "+2.4%", icon: Activity, note: "against previous period" },
   ];
 
+  if (isPasswordResetAction) {
+    return <PasswordResetPage />;
+  }
+
   if (authLoading) {
     return (
       <main className="auth-screen">
@@ -430,6 +603,22 @@ function App() {
           {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
           <span>{theme === "light" ? "Dark" : "Light"}</span>
         </button>
+        <aside className="auth-story" aria-label="Northstar">
+          <a className="brand auth-story-brand" href="/" aria-label="Northstar home">
+            <span className="brand-mark"><Activity size={18} /></span>
+            <span>northstar<span className="brand-light">.</span></span>
+          </a>
+          <div className="auth-story-copy">
+            <p className="auth-story-kicker">A CLEARER VIEW OF YOUR BUSINESS</p>
+            <h2>Your store,<br />in good hands.</h2>
+            <p>Make space for the big picture. Your sales, orders, and customer trends come together in one thoughtful view.</p>
+            <div className="auth-story-tags" aria-label="Dashboard highlights">
+              <span><Activity size={14} /> Store insights</span>
+              <span><PackageCheck size={14} /> Secure sign-in</span>
+            </div>
+          </div>
+          <span className="auth-story-mark" aria-hidden="true">✳</span>
+        </aside>
         <section className="auth-card" aria-labelledby="auth-title">
           <a className="brand auth-brand" href="/" aria-label="Northstar home">
             <span className="brand-mark"><Activity size={18} /></span>
@@ -455,14 +644,14 @@ function App() {
             </div>
           )}
           {authMode === "reset" ? (
-            <div className="auth-form">
+            <form className="auth-form" onSubmit={(event) => { event.preventDefault(); void handlePasswordReset(); }}>
               <label htmlFor="auth-email">Email address</label>
               <input id="auth-email" type="email" autoComplete="email" value={authEmail} onChange={(event) => setAuthEmail(event.target.value)} placeholder="you@example.com" required />
               {authError && <p className="auth-feedback error" role="alert">{authError}</p>}
               {authMessage && <p className="auth-feedback success" role="status">{authMessage}</p>}
-              <button className="dialog-primary" type="button" onClick={handlePasswordReset} disabled={authBusy || !firebaseConfigured}>{authBusy ? "Sending…" : "Send reset link"}</button>
-              <button className="auth-switch" type="button" onClick={() => switchAuthMode("signin")}>Back to sign in</button>
-            </div>
+              <button className="dialog-primary" type="submit" disabled={authBusy || !firebaseConfigured}>{authBusy ? "Sending your email…" : "Send password reset email"}</button>
+              <button className="auth-switch auth-back-link" type="button" onClick={() => switchAuthMode("signin")}>Back to sign in</button>
+            </form>
           ) : (
             <form className="auth-form" onSubmit={handleAuthSubmit}>
               {authMode === "signup" && (
@@ -479,7 +668,7 @@ function App() {
               <button className="dialog-primary" type="submit" disabled={authBusy || !firebaseConfigured}>
                 {authBusy ? "Please wait…" : authMode === "signup" ? "Create account" : "Sign in securely"}
               </button>
-              {authMode === "signin" && <button className="auth-switch forgot-password" type="button" onClick={() => switchAuthMode("reset")}>Forgot password?</button>}
+              {authMode === "signin" && <button className="auth-switch forgot-password" type="button" onClick={handleForgotPasswordClick}>Forgot password?</button>}
               <p className="auth-switch-prompt">
                 {authMode === "signup" ? "Already have an account?" : "New to Northstar?"}
                 <button className="auth-switch" type="button" onClick={() => switchAuthMode(authMode === "signup" ? "signin" : "signup")}>
