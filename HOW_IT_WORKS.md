@@ -16,6 +16,8 @@ The dashboard is not connected to a shop or payment service. It generates 270 il
 
 Product and customer details are made-up examples. Store choices and order records exist in frontend sample data and are not private per-account records.
 
+The deployed dashboard is available at [infozatech-analytics.web.app](https://infozatech-analytics.web.app). Dashboard labels use larger text for readability; the native store and filter option lists use dark text on a light background for contrast.
+
 ## Filters
 
 - **Date range** can be set with the calendar inputs or the 7-, 30-, and 90-day presets.

@@ -4,6 +4,8 @@ A responsive retail analytics dashboard built with React, Vite, Recharts, and Fi
 
 Northstar brings store performance into one view with sales summaries, interactive charts, product rankings, and recent orders.
 
+**Live demo:** [infozatech-analytics.web.app](https://infozatech-analytics.web.app)
+
 > **Demo data:** Store names, orders, customers, and performance metrics are generated examples. Firebase Authentication provides real account sign-in, but the dashboard is not yet connected to a live commerce data source.
 
 ## Features
@@ -16,6 +18,7 @@ Northstar brings store performance into one view with sales summaries, interacti
 - Interactive store insights based on current filters
 - Firebase email/password account creation, sign-in, password reset, and sign-out
 - Responsive desktop, tablet, and mobile layouts
+- Readable dashboard typography with high-contrast store and filter menus
 
 ## Tech stack
 
@@ -120,6 +123,8 @@ firebase deploy --only hosting
 ```
 
 Add the deployed domain under Firebase **Authentication → Settings → Authorized domains**. See [HOW_TO_RUN.md](./HOW_TO_RUN.md) for Windows-specific setup and troubleshooting.
+
+For GitHub Actions deployments, add `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, and `VITE_FIREBASE_APP_ID` as repository Actions variables under **Settings → Secrets and variables → Actions → Variables** before pushing to `main`. The local `.env` file is not uploaded to GitHub Actions. Keep the Firebase Hosting service-account credential in Actions **secrets**. A successful deployment is available at [https://infozatech-analytics.web.app](https://infozatech-analytics.web.app).
 
 ## Security and data notes
 

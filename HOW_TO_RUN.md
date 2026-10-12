@@ -1,5 +1,9 @@
 # How to Run the Northstar Dashboard
 
+## Live demo
+
+The deployed app is available at [https://infozatech-analytics.web.app](https://infozatech-analytics.web.app).
+
 ## Requirements
 
 - Node.js (version 20 or newer recommended)
@@ -53,6 +57,19 @@ The app uses Firebase Authentication for email/password registration, sign-in, p
 If sign-in reports an authorized-domain error, add your development host (usually `localhost`) under **Authentication → Settings → Authorized domains** in Firebase Console. For a deployed app, add its domain there as well.
 
 The local `.env` file is excluded from Git. Firebase web configuration is used by the browser app; protect any future private server credentials separately and configure Firebase security rules before storing private store data in Firestore.
+
+### Configure GitHub Actions deployments
+
+The Firebase Hosting workflow builds the app in GitHub Actions, where the local `.env` file is not available. Add these four **repository Actions variables** under **Settings → Secrets and variables → Actions → Variables** so the deployed sign-in screen receives the Firebase web-app config:
+
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_APP_ID`
+
+These are Firebase web-app client configuration values, not server credentials. Save the variables before pushing a change to `main` to run the Hosting deployment again. Keep private service-account credentials in **Actions secrets**, not variables.
+
+The GitHub Actions deployment workflow expects the Hosting service-account credential in the `FIREBASE_SERVICE_ACCOUNT_INFOZATECH_ANALYTICS` repository secret. If the Firebase Actions variables are missing, a GitHub-triggered build cannot initialize Firebase Authentication correctly.
 
 ## Start the development server
 

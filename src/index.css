@@ -35,6 +35,7 @@ button, select { cursor: pointer; }
 .brand-light { color: #f17b63; }
 .store-switcher { position: relative; display: flex; align-items: center; gap: 9px; margin-top: 35px; padding: 11px 9px; border: 1px solid #39404e; border-radius: 10px; background: #292f3d; cursor: pointer; }
 .store-switcher select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.store-switcher select option, .filter-select option { background: #fff; color: #262a36; font-size: 12px; }
 .store-monogram { display: grid; width: 29px; height: 29px; flex: 0 0 auto; place-items: center; border-radius: 8px; background: #d5e2c6; color: #344537; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; }
 .store-details { display: grid; flex: 1; gap: 3px; min-width: 0; }
 .store-details strong { overflow: hidden; font-size: 10px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
@@ -403,6 +404,42 @@ body[data-theme="dark"] .recharts-default-tooltip { border-color: #414958 !impor
   .status-legend, .category-legend { min-width: 87px; }
   .search-box { width: 103px; }
 }
+
+/* Keep dashboard labels comfortable to read on desktop and mobile. */
+.store-details strong, .store-details small, .nav-item, .nav-count,
+.sidebar-note p, .sidebar-note .note-insight, .note-next,
+.profile-card strong, .profile-card small, .breadcrumb, .sync-label,
+.theme-toggle, .account-menu button, .account-menu-heading strong,
+.account-menu-heading small, .subtitle, .export-button,
+.date-picker input, .date-to, .filter-select,
+.metric-top, .trend, .metric-note, .panel-heading p,
+.sales-total span, .status-center span, .legend-row,
+.legend-row strong, .category-row, .category-row strong,
+.orders-count, .search-box input, td, .order-id, .product-name,
+td small, .status-pill, .table-caption, .rank-number,
+.rank-label strong, .rank-label small, .empty-products,
+.page-footer, .footer-help, .dialog-description,
+.setting-option strong, .setting-option small, .dialog-primary,
+.help-entries strong, .help-entries p, .auth-description,
+.auth-form > label, .auth-form > input, .auth-switch-prompt,
+.auth-switch, .auth-feedback, .auth-setup-notice,
+.auth-setup-notice strong, .auth-footnote {
+  font-size: 12px;
+}
+
+.nav-label, .eyebrow, .section-kicker, th, .dialog-kicker {
+  font-size: 10px;
+}
+
+.sidebar-note .note-title strong { font-size: 14px; }
+.metric-value { font-size: clamp(24px, 2.2vw, 30px); }
+.sales-total strong { font-size: 20px; }
+.status-center strong { font-size: 24px; }
+h2 { font-size: 16px; }
+.orders-heading h2 { font-size: 16px; }
+.rank-label small { font-size: 11px; }
+.recharts-cartesian-axis-tick-value { font-size: 11px; }
+.recharts-default-tooltip { font-size: 12px; }
 
 @media print {
   .sidebar, .topbar, .filter-bar, .export-button, .search-box { display: none !important; }
