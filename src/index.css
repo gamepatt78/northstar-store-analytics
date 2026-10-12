@@ -254,7 +254,6 @@ td small { display: block; margin-top: 2px; color: #a3a2a5; font-size: 7px; }
 .auth-footnote { margin: 17px 0 0; color: #a0a0a3; font-size: 8px; text-align: center; }
 .auth-loading { display: grid; justify-items: center; gap: 13px; color: #777b86; font-size: 11px; }
 .auth-loading p { margin: 0; }
-.auth-theme-toggle { position: fixed; top: 18px; right: 18px; }
 .auth-screen { display: grid; grid-template-columns: minmax(290px, 390px) minmax(360px, 440px); align-content: center; justify-content: center; gap: clamp(42px, 8vw, 112px); overflow: hidden; background: radial-gradient(ellipse at 12% 16%, rgba(102, 123, 158, .2), transparent 39%), radial-gradient(ellipse at 88% 88%, rgba(226, 139, 115, .13), transparent 35%), #202633; }
 .auth-card { position: relative; z-index: 1; width: 100%; padding: 38px; border-color: rgba(255,255,255,.72); border-radius: 20px; box-shadow: 0 28px 90px rgba(8, 12, 20, .28); }
 .auth-brand { margin-bottom: 31px; }

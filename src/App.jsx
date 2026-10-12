@@ -584,10 +584,6 @@ function App() {
   if (authLoading) {
     return (
       <main className="auth-screen">
-        <button className="theme-toggle auth-theme-toggle" type="button" onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}>
-          {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
-          <span>{theme === "light" ? "Dark" : "Light"}</span>
-        </button>
         <section className="auth-card auth-loading">
           <span className="brand-mark"><Activity size={18} /></span>
           <p>Checking your account…</p>
@@ -599,10 +595,6 @@ function App() {
   if (!user) {
     return (
       <main className="auth-screen">
-        <button className="theme-toggle auth-theme-toggle" type="button" onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}>
-          {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
-          <span>{theme === "light" ? "Dark" : "Light"}</span>
-        </button>
         <aside className="auth-story" aria-label="Northstar">
           <a className="brand auth-story-brand" href="/" aria-label="Northstar home">
             <span className="brand-mark"><Activity size={18} /></span>
