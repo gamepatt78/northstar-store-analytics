@@ -487,7 +487,7 @@ function App() {
     event.preventDefault();
     clearAuthFeedback();
     if (!auth) {
-      setAuthError("Firebase is not configured. Follow the setup steps in HOW_TO_RUN.md.");
+      setAuthError("Firebase is not configured. Follow the setup steps in docs/HOW_TO_RUN.md.");
       return;
     }
 
@@ -516,7 +516,7 @@ function App() {
   const handlePasswordReset = async () => {
     clearAuthFeedback();
     if (!auth) {
-      setAuthError("Firebase is not configured. Follow the setup steps in HOW_TO_RUN.md.");
+      setAuthError("Firebase is not configured. Follow the setup steps in docs/HOW_TO_RUN.md.");
       return;
     }
     if (!authEmail.trim()) {
@@ -632,7 +632,7 @@ function App() {
           {!firebaseConfigured && (
             <div className="auth-setup-notice">
               <strong>Firebase setup is needed</strong>
-              <span>Copy <code>.env.example</code> to <code>.env</code>, add your Firebase web-app config, and enable Email/Password sign-in in Firebase Console. See HOW_TO_RUN.md for details.</span>
+              <span>Copy <code>.env.example</code> to <code>.env</code>, add your Firebase web-app config, and enable Email/Password sign-in in Firebase Console. See docs/HOW_TO_RUN.md for details.</span>
             </div>
           )}
           {authMode === "reset" ? (

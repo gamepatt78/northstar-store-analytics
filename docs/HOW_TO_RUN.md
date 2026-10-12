@@ -18,7 +18,7 @@ npm.cmd --version
 
 ## Install dependencies
 
-Open PowerShell and move to the project folder:
+Open PowerShell and move to the project root folder (the parent of `docs`):
 
 ```powershell
 Set-Location -LiteralPath "C:\Users\rainc\Downloads\Projects(intern)\Projects(intern)\InfozaTech\infozatech-analytics"

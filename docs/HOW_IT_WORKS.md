@@ -2,13 +2,13 @@
 
 ## Project structure
 
-- `index.html` provides the browser page shell and React root.
-- `src/main.jsx` starts the React app and loads the styles.
-- `src/App.jsx` contains the fictional store data, filters, metric calculations, charts, and order list.
-- `src/index.css` defines the visual design, mobile and tablet layouts, and print styles.
-- `src/firebase.js` initializes Firebase Authentication only when the required local config values are present.
-- `.env.example` lists the Firebase web-app configuration keys. Put actual values in your ignored local `.env` file.
-- `package.json` contains the app dependencies and commands.
+- `../index.html` provides the browser page shell and React root.
+- `../src/main.jsx` starts the React app and loads the styles.
+- `../src/App.jsx` contains the fictional store data, filters, metric calculations, charts, and order list.
+- `../src/index.css` defines the visual design, mobile and tablet layouts, and print styles.
+- `../src/firebase.js` initializes Firebase Authentication only when the required local config values are present.
+- `../.env.example` lists the Firebase web-app configuration keys. Put actual values in your ignored local `.env` file.
+- `../package.json` contains the app dependencies and commands.
 
 ## Sample store data
 
