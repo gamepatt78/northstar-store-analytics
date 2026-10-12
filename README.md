@@ -141,7 +141,7 @@ npm run build
 firebase deploy --only hosting
 ```
 
-Add the deployed domain under Firebase **Authentication → Settings → Authorized domains**. See [HOW_TO_RUN.md](./HOW_TO_RUN.md) for Windows-specific setup and troubleshooting.
+Add the deployed domain under Firebase **Authentication → Settings → Authorized domains**. See [docs/HOW_TO_RUN.md](./docs/HOW_TO_RUN.md) for Windows-specific setup and troubleshooting.
 
 For GitHub Actions deployments, add `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, and `VITE_FIREBASE_APP_ID` as repository Actions variables under **Settings → Secrets and variables → Actions → Variables**. The local `.env` file is not uploaded to GitHub Actions. Workflows stop before deployment if any required Firebase variable is missing, preventing an unconfigured build from replacing the live site. Keep the Firebase Hosting service-account credential in Actions **secrets**. The GitHub workflows deploy on pushes to `main` and pull requests after their configuration checks pass.
 
@@ -154,5 +154,6 @@ For GitHub Actions deployments, add `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH
 
 ## Project guides
 
-- [How to run the app](./HOW_TO_RUN.md)
-- [How the dashboard works](./HOW_IT_WORKS.md)
+- [How to run the app](./docs/HOW_TO_RUN.md)
+- [How the dashboard works](./docs/HOW_IT_WORKS.md)
+- [Demo presentation script](./docs/DEMO_PRESENTATION_SCRIPT.md)
