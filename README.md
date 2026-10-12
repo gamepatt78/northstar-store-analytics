@@ -6,7 +6,7 @@ Northstar brings store performance into one view with sales summaries, interacti
 
 **Live demo:** [infozatech-analytics.web.app](https://infozatech-analytics.web.app)
 
-> **Demo data:** Store names, orders, customers, and performance metrics are generated examples. Firebase Authentication provides real account sign-in, but the dashboard is not yet connected to a live commerce data source.
+> **Current data status:** The dashboard currently uses illustrative sample orders and customer information. Firebase Authentication handles user accounts, but no live commerce platform or database is connected.
 
 ## Features
 
@@ -21,6 +21,10 @@ Northstar brings store performance into one view with sales summaries, interacti
 - Modern sign-in and registration screens with responsive styling
 - Responsive desktop, tablet, and mobile layouts
 - Readable dashboard typography with high-contrast store and filter menus
+
+## Planned integration
+
+**Live Data Integration:** The dashboard is designed to display store orders, customer information, and performance metrics using connected data sources. Connect a live commerce platform or database to enable real-time reporting. This integration is not implemented yet; the current charts and orders use generated demo data.
 
 ## Tech stack
 
@@ -37,6 +41,8 @@ Northstar brings store performance into one view with sales summaries, interacti
 - A Firebase project to enable account sign-in
 
 ## Run locally
+
+Run these commands from the project root (the parent folder of `docs`):
 
 Install dependencies:
 
@@ -60,7 +66,6 @@ npm.cmd install
    ```powershell
    Copy-Item .env.example .env
    ```
-
 5. Replace the placeholders in `.env` with the values from your Firebase web app:
 
    ```text
@@ -69,7 +74,6 @@ npm.cmd install
    VITE_FIREBASE_PROJECT_ID=your-project-id
    VITE_FIREBASE_APP_ID=your-app-id
    ```
-
 6. Start or restart the dev server after changing `.env`:
 
    ```bash
@@ -139,13 +143,13 @@ firebase deploy --only hosting
 
 Add the deployed domain under Firebase **Authentication → Settings → Authorized domains**. See [HOW_TO_RUN.md](./HOW_TO_RUN.md) for Windows-specific setup and troubleshooting.
 
-For GitHub Actions deployments, add `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, and `VITE_FIREBASE_APP_ID` as repository Actions variables under **Settings → Secrets and variables → Actions → Variables** before pushing to `main`. The local `.env` file is not uploaded to GitHub Actions. Workflows stop before deployment if any required Firebase variable is missing, preventing an unconfigured build from replacing the live site. Keep the Firebase Hosting service-account credential in Actions **secrets**. A successful deployment is available at [https://infozatech-analytics.web.app](https://infozatech-analytics.web.app).
+For GitHub Actions deployments, add `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, and `VITE_FIREBASE_APP_ID` as repository Actions variables under **Settings → Secrets and variables → Actions → Variables**. The local `.env` file is not uploaded to GitHub Actions. Workflows stop before deployment if any required Firebase variable is missing, preventing an unconfigured build from replacing the live site. Keep the Firebase Hosting service-account credential in Actions **secrets**. The GitHub workflows deploy on pushes to `main` and pull requests after their configuration checks pass.
 
 ## Security and data notes
 
-- `.env` is excluded from Git. Do not commit it or share private server credentials.
+- The project-root `.env` file is excluded from Git. Do not commit it or share private server credentials.
 - Firebase web-app settings are client configuration; they do not replace authentication-aware data access rules.
-- The selected store and its orders are still local sample data. Authentication does not make those sample records private or user-specific.
+- The selected store and its orders are generated frontend sample data. Authentication does not make those sample records private or user-specific.
 - Before connecting real customer or order data, use a trusted backend or a properly secured data service with user-scoped access rules.
 
 ## Project guides
