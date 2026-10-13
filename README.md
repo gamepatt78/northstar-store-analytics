@@ -156,4 +156,3 @@ For GitHub Actions deployments, add `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH
 
 - [How to run the app](./docs/HOW_TO_RUN.md)
 - [How the dashboard works](./docs/HOW_IT_WORKS.md)
-- [Demo presentation script](./docs/DEMO_PRESENTATION_SCRIPT.md)
